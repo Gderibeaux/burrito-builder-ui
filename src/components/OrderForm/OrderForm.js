@@ -10,10 +10,32 @@ class OrderForm extends Component {
     };
   }
 
+  handleName = event => {
+    this.setState({ [event.target.name]: event.target.value})
+  }
 
+  handleIngredients = event => {
+    event.preventDefault();
+    const ingredient = event.target.name
+    const ingredients = [...this.state.ingredients, ingredient];
+    this.setState({ ingredients })
+  }
   handleSubmit = e => {
     e.preventDefault();
-    this.clearInputs();
+    const {name, ingredients} = this.state
+    if (name && ingredients.length) {
+      fetch('http://localhost:3001/api/v1/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({name, ingredients})
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.props.newBurrito(data)
+        this.clearInputs();
+      })
+      .catch(err => console.log('ERROR', err))
+    }
   }
 
   clearInputs = () => {
@@ -24,7 +46,7 @@ class OrderForm extends Component {
     const possibleIngredients = ['beans', 'steak', 'carnitas', 'sofritas', 'lettuce', 'queso fresco', 'pico de gallo', 'hot sauce', 'guacamole', 'jalapenos', 'cilantro', 'sour cream'];
     const ingredientButtons = possibleIngredients.map(ingredient => {
       return (
-        <button key={ingredient} name={ingredient} onClick={e => this.handleIngredientChange(e)}>
+        <button key={ingredient} name={ingredient} onClick={event => this.handleIngredients(event)}>
           {ingredient}
         </button>
       )
@@ -37,7 +59,7 @@ class OrderForm extends Component {
           placeholder='Name'
           name='name'
           value={this.state.name}
-          onChange={e => this.handleNameChange(e)}
+          onChange={event => this.handleName(event)}
         />
 
         { ingredientButtons }

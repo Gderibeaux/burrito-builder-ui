@@ -23,12 +23,15 @@ class App extends Component {
       })
   }
 
+  newBurrito = order => {
+    this.setState({orders: [...this.state.orders, order]})
+  }
   render() {
     return (
       <main className="App">
         <header>
           <h1>Burrito Builder</h1>
-          <OrderForm />
+          <OrderForm newBurrito={this.newBurrito}/>
         </header>
 
         <Orders orders={this.state.orders}/>
