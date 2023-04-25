@@ -3,6 +3,11 @@ describe('homepage', () => {
         cy.intercept('GET', 'http://localhost:3001/api/v1/orders', {
             fixture: 'orderExample.json'
         })
+
+        cy.intercept('POST', 'http://localhost:3001/api/v1/orders', {
+            fixture: 'orderExample2.json'
+            
+        })
         cy.visit('http://localhost:3000/')
     })
 
@@ -47,13 +52,13 @@ it('should update the order on ingredient clicks', () => {
 //Once it sumbitted a user should be able to see the new order card
 it('should be able to make a post request and see the new order', () => {
     cy.get('input[name="name"]').type('John')
+        .should('have.value', 'John')
       .get('button[name="beans"]').click()
       .get('button[name="steak"]').click()
       .get('button[name="lettuce"]').click()
       .get('p').contains("Order: beans, steak, lettuce")
       .get(':nth-child(15)').click()
-     cy.get("section").children()
-      .should('have.length', 2)
+     cy.get('.order').should('have.length', 2)
      cy.get('section > :nth-child(2)')
       .get(':nth-child(2) > h3').contains('John')
       .get(':nth-child(2) > .ingredient-list')
