@@ -26,6 +26,19 @@ class App extends Component {
   newBurrito = order => {
     this.setState({orders: [...this.state.orders, order]})
   }
+
+  handleDelete = id => {
+    fetch(`http://localhost:3001/api/v1/orders/${id}`, {
+      method: 'DELETE',
+    })
+      .then(response => response.json())
+      .then(() => {
+        const updatedOrders = this.state.orders.filter(order => order.id !== id);
+        this.setState({ orders: updatedOrders });
+      })
+      .catch(err => console.log('ERROR', err));
+  }
+
   render() {
     return (
       <main className="App">
@@ -34,7 +47,7 @@ class App extends Component {
           <OrderForm newBurrito={this.newBurrito}/>
         </header>
 
-        <Orders orders={this.state.orders}/>
+        <Orders orders={this.state.orders} handleDelete={this.handleDelete}/>
       </main>
     );
   }
