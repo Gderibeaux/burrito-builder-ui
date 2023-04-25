@@ -6,7 +6,8 @@ class OrderForm extends Component {
     this.props = props;
     this.state = {
       name: '',
-      ingredients: []
+      ingredients: [],
+      error: ''
     };
   }
 
@@ -35,6 +36,8 @@ class OrderForm extends Component {
         this.clearInputs();
       })
       .catch(err => console.log('ERROR', err))
+    } else {
+      this.setState({error: 'Enter name and ingredients'})
     }
   }
 
@@ -69,6 +72,7 @@ class OrderForm extends Component {
         <button onClick={e => this.handleSubmit(e)}>
           Submit Order
         </button>
+        {this.state.error && <p>{this.state.error}</p>}
       </form>
     )
   }
